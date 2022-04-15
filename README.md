@@ -1,2 +1,3 @@
 # gydeon
-A ssh bruteforcing utility
+
+A command-line based utility for bruteforcing ssh
