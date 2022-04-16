@@ -2,7 +2,7 @@ package utils
 
 /*
 // Author: Aliasgar Khimani (NovusEdge)
-// Project: github.com/NovusEdge/gydeon
+// Project: github.com/NovusEdge/buraq
 //
 // Copyright: GNU General Public License v3.0
 // See the LICENSE file for more info.
@@ -22,11 +22,11 @@ func GetHomeDirectory() string {
 	return os.Getenv("HOME")
 }
 
-// GetEnv fetches the env for gydeon
-// The default location for env is ~/.gydeon/env
+// GetEnv fetches the env for buraq
+// The default location for env is ~/.buraq/env
 func GetEnv() map[string]string {
 	homeDir := GetHomeDirectory()
-	content, err := ioutil.ReadFile(homeDir + "/.gydeon/env")
+	content, err := ioutil.ReadFile(homeDir + "/.buraq/env")
 	if err != nil {
 		log.Fatal(err)
 	}

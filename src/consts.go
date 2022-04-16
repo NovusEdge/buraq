@@ -1,8 +1,8 @@
-package gydeon
+package buraq
 
 /*
 // Author: Aliasgar Khimani (NovusEdge)
-// Project: github.com/NovusEdge/gydeon
+// Project: github.com/NovusEdge/buraq
 //
 // Copyright: GNU General Public License v3.0
 // See the LICENSE file for more info.
@@ -19,21 +19,21 @@ const BannerArt string = `
 ╚██████╔╝  ██║   ██████╔╝███████╗╚██████╔╝██║ ╚████║
  ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝`
 
-// Version for the gydeon CLI
+// Version for the buraq CLI
 const Version string = "v1.0.0"
 
-// HelpScreen lists all command line flags and usage for gydeon.
+// HelpScreen lists all command line flags and usage for buraq.
 const HelpScreen string = `
-Gydeon:
+Buraq:
     A command-line utility for bruteforcing ssh
 
-Usage:
-    gydeon [command] [options] target
+USAGE:
+    buraq [command] [options] target
 
-Commands:
+COMMANDS:
     check               perform simple enumeration for ssh services on target.
 
-Options:
+OPTIONS:
     -h --help           prints this menu
     -v --version        prints the version of the program
     -q --quiet          enable output suppression

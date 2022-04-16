@@ -2,7 +2,7 @@
 
 : '
     Author: Aliasgar Khimani (NovusEdge)
-    Project: github.com/NovusEdge/gydeon
+    Project: github.com/NovusEdge/buraq
     Copyright: GNU General Public License v3.0
     See the LICENSE file for more info.
     All Rights Reserved
@@ -13,7 +13,7 @@ VERSION="v1.0.0"
 printf "\033[1;36m=================LICENSE NOTICE=================\n";
 echo "\
     Author: Aliasgar Khimani (NovusEdge)
-    Project: github.com/NovusEdge/gydeon
+    Project: github.com/NovusEdge/buraq
     Version: $VERSION
     Copyright: GNU General Public License v3.0
     See the LICENSE file for more info.
@@ -53,28 +53,28 @@ printf "\033[1;32m[+]: Done!\033[0m\n\n";
 ## Building binaries...
 printf "\033[1;36m[I]: Building binaries...\033[0m\n";
 
-$GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/gydeon.go
+$GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/buraq.go
 $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/clean.go
 $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/repair.go
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
 
 
-## Making ~/.gydeon if it does not exist.
-if [ ! -d $HOME/.gydeon ]; then
-    printf "\033[1;36m[I]: Making .gydeon in $HOME for storing config files and logs...\033[0m\n";
-    mkdir $HOME/.gydeon
-    touch $HOME/.gydeon/env
+## Making ~/.buraq if it does not exist.
+if [ ! -d $HOME/.buraq ]; then
+    printf "\033[1;36m[I]: Making .buraq in $HOME for storing config files and logs...\033[0m\n";
+    mkdir $HOME/.buraq
+    touch $HOME/.buraq/env
     printf "\033[1;32m[+]: Done!\033[0m\n\n";
 fi
 
-## Setting up ~/.gydeon/env
+## Setting up ~/.buraq/env
 printf "\033[1;36m[I]: Setting up environment file...\033[0m\n";
 
-echo GYDEONROOT="$PROJECT_DIR"            > $HOME/.gydeon/env
-echo GYDEONVER="$VERSION"                >> $HOME/.gydeon/env
-echo GYDEONBIN="$PROJECT_DIR/bin"        >> $HOME/.gydeon/env
-echo GYDEONENV="$HOME/.gydeon/env"       >> $HOME/.gydeon/env
-echo GOVERSION="$($GO version)"          >> $HOME/.gydeon/env
+echo BURAQROOT="$PROJECT_DIR"            > $HOME/.buraq/env
+echo BURAQVER="$VERSION"                >> $HOME/.buraq/env
+echo BURAQBIN="$PROJECT_DIR/bin"        >> $HOME/.buraq/env
+echo BURAQENV="$HOME/.buraq/env"       >> $HOME/.buraq/env
+echo GOVERSION="$($GO version)"          >> $HOME/.buraq/env
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
