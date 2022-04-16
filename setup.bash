@@ -71,10 +71,10 @@ fi
 ## Setting up ~/.buraq/env
 printf "\033[1;36m[I]: Setting up environment file...\033[0m\n";
 
-echo BURAQROOT="$PROJECT_DIR"            > $HOME/.buraq/env
-echo BURAQVER="$VERSION"                >> $HOME/.buraq/env
-echo BURAQBIN="$PROJECT_DIR/bin"        >> $HOME/.buraq/env
-echo BURAQENV="$HOME/.buraq/env"       >> $HOME/.buraq/env
+echo BURAQROOT="$PROJECT_DIR"             > $HOME/.buraq/env
+echo BURAQVER="$VERSION"                 >> $HOME/.buraq/env
+echo BURAQBIN="$PROJECT_DIR/bin"         >> $HOME/.buraq/env
+echo BURAQENV="$HOME/.buraq/env"         >> $HOME/.buraq/env
 echo GOVERSION="$($GO version)"          >> $HOME/.buraq/env
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
