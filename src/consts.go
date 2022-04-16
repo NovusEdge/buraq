@@ -31,10 +31,16 @@ USAGE:
     buraq [command] [options] target
 
 COMMANDS:
-    check               perform simple enumeration for ssh services on target.
+    help                Prints this menu if no further option is provided. This
+                        can be used in conjunction with other command names to
+                        print a more comprehensive guide for usage of said command.
+                        For example:
+                            buraq help check
+                        This will print out information about the check command.
+
+    version             Prints the version of buraq in use.
+    check               Perform simple enumeration for ssh services on target.
 
 OPTIONS:
-    -h --help           prints this menu
-    -v --version        prints the version of the program
-    -q --quiet          enable output suppression
-`
+    -q  -quiet          Enable output suppression for commands.
+    -p  -port           Specifies the port on which the ssh service is running.`

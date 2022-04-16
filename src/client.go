@@ -14,11 +14,36 @@ import (
 	"github.com/melbahja/goph"
 )
 
-// Client wraps the type: ssh.Client for the use in this program.
-type Client struct {
-	// ssh client for sending in login requests.
-	client *goph.Client
+// CheckCreds returns (true, nil) if connected to ssh service successfully.
+func CheckCreds(username string, password string, target string, customConfig *goph.Config) (bool, error) {
+	var err error
+	var output []byte
+	var c *goph.Client
 
-	// auth credentials.
-	auth *goph.Client
+	defer c.Close()
+
+	if customConfig == nil {
+		c, err = simpleConn(username, password, target)
+	} else {
+		c, err = customConn(customConfig)
+	}
+
+	if output, err = c.Run("whoami"); string(output) == c.Config.User {
+		return true, err
+	}
+
+	return false, err
+}
+
+// simpleConn initiates a new ssh connection with standard config.
+func simpleConn(username, password, target string) (c *goph.Client, err error) {
+	auth := goph.Password(password)
+	c, err = goph.New(username, target, auth)
+	return
+}
+
+
+// customConn initiates a new ssh connection with custom config.
+func customConn(conf *goph.Config) (*goph.Client, error) {
+	return goph.NewConn(conf)
 }

@@ -20,12 +20,12 @@ import (
 
 func main() {
 	env := utils.GetEnv()
-	bin, err := ioutil.ReadDir(env["buraqBIN"])
+	bin, err := ioutil.ReadDir(env["BURAQBIN"])
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, file := range bin {
-		os.RemoveAll(path.Join([]string{env["buraqBIN"], file.Name()}...))
+		os.RemoveAll(path.Join([]string{env["BURAQBIN"], file.Name()}...))
 	}
 }
