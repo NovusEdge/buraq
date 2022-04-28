@@ -28,6 +28,10 @@ if [ ! -d "$PROJECT_DIR/bin" ]; then
     printf "\033[1;36m[I]: Making the binary directory\033[0m\n\tBinary directory: $PROJECT_DIR/bin/\n\n";
     mkdir -p $PROJECT_DIR/bin;
 fi
+if [ ! -d "$PROJECT_DIR/cmdbin" ]; then
+    printf "\033[1;36m[I]: Making the command-binary directory\033[0m\n\tBinary directory: $PROJECT_DIR/bin/cmdbin\n\n";
+    mkdir -p $PROJECT_DIR/cmdbin;
+fi
 
 if ! type "go" > /dev/null; then
     printf "\033[1;31m[E]: Golang not detected!\n";
@@ -57,6 +61,10 @@ $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/buraq.go
 $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/clean.go
 $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/repair.go
 
+$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/env.go
+$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/help.go
+$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/version.go
+
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
 
 
@@ -73,8 +81,9 @@ printf "\033[1;36m[I]: Setting up environment file...\033[0m\n";
 
 echo BURAQROOT="$PROJECT_DIR"             > $HOME/.buraq/env
 echo BURAQVER="$VERSION"                 >> $HOME/.buraq/env
-echo BURAQBIN="$PROJECT_DIR/bin"         >> $HOME/.buraq/env
 echo BURAQENV="$HOME/.buraq/env"         >> $HOME/.buraq/env
+echo BURAQBIN="$PROJECT_DIR/bin"         >> $HOME/.buraq/env
+echo BURAQCMDBIN="$PROJECT_DIR/cmdbin"   >> $HOME/.buraq/env
 echo GOVERSION="$($GO version)"          >> $HOME/.buraq/env
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";

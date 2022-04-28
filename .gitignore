@@ -16,3 +16,4 @@
 
 # Ignoring the binary directory
 bin/
+cmdbin/

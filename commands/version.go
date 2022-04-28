@@ -1,4 +1,4 @@
-package buraq
+package main
 
 /*
 // Author: Aliasgar Khimani (NovusEdge)
@@ -10,7 +10,12 @@ package buraq
 // All Rights Reserved
 */
 
-// AttemptConnection makes a credentials
-func AttemptConnection() {
+import (
+	"fmt"
 
+	src "github.com/NovusEdge/buraq/src"
+)
+
+func main() {
+	fmt.Println("buraq", src.Version)
 }
