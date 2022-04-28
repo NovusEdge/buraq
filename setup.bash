@@ -50,6 +50,8 @@ printf "\033[1;36m[I]: Getting golang dependencies...\033[0m\n";
 cd $PROJECT_DIR
 go get -x
 go get -x -d ./src/
+go get -x -d ./utils/
+go get -x -d ./commands/
 cd $oldcwd
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
