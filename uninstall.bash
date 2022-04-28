@@ -3,7 +3,7 @@
 : '
     Author: Aliasgar Khimani (NovusEdge)
     Project: github.com/ARaChn3/buraq
-    Copyright: MPL 2.0
+    Copyright: GNU General Public License v3.0
     See the LICENSE file for more info.
     All Rights Reserved
 '
