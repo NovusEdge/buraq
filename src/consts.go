@@ -22,6 +22,18 @@ const BannerArt string = `
 // Version for the buraq CLI
 const Version string = "v1.0.0"
 
+// ValidCommands that can be provided to the CLI.
+func ValidCommands() []string {
+	return []string{
+		"env",
+		"help",
+		"check",
+		"clean",
+		"repair",
+		"version",
+	}
+}
+
 // HelpScreen lists all command line flags and usage for buraq.
 const HelpScreen string = `
 Buraq:
@@ -39,8 +51,9 @@ COMMANDS:
                         This will print out information about the check command.
 
     version             Prints the version of buraq in use.
-    check               Perform simple enumeration for ssh services on target.
+    env                 Prints the environment variables used by the CLI.
+                        These are stored (by default) in ~/.buraq
 
-OPTIONS:
-    -q  -quiet          Enable output suppression for commands.
-    -p  -port           Specifies the port on which the ssh service is running.`
+    check               Perform simple enumeration for ssh services on target.
+    clean               Clear all binaries for the CLI.
+    repair              Clear and rebuild all binaries for the CLI.`

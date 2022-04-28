@@ -28,4 +28,13 @@ func main() {
 	for _, file := range bin {
 		os.RemoveAll(path.Join([]string{env["BURAQBIN"], file.Name()}...))
 	}
+
+	bin, err = ioutil.ReadDir(env["BURAQCMDBIN"])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range bin {
+		os.RemoveAll(path.Join([]string{env["BURAQCMDBIN"], file.Name()}...))
+	}
 }
