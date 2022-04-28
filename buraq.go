@@ -28,7 +28,6 @@ var ENV = utils.GetEnv()
 func main() {
 	checkCommand(os.Args)
 	executeCommand(os.Args)
-
 }
 
 func checkCommand(args []string) {
