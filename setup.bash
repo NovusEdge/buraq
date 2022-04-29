@@ -50,6 +50,8 @@ printf "\033[1;36m[I]: Getting golang dependencies...\033[0m\n";
 cd $PROJECT_DIR
 go get -x
 go get -x -d ./src/
+go get -x -d ./utils/
+go get -x -d ./commands/
 cd $oldcwd
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
@@ -57,13 +59,16 @@ printf "\033[1;32m[+]: Done!\033[0m\n\n";
 ## Building binaries...
 printf "\033[1;36m[I]: Building binaries...\033[0m\n";
 
+# Building main binary...
 $GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/buraq.go
-$GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/clean.go
-$GO build -o $PROJECT_DIR/bin/ $PROJECT_DIR/tools/repair.go
 
-$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/env.go
-$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/help.go
-$GO build -o $PROJECT_DIR/cmdbin $PROJECT_DIR/commands/version.go
+# Building command binaries...
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/env.go
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/help.go
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/clean.go
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/attack.go
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/repair.go
+$GO build -o $PROJECT_DIR/cmdbin/ $PROJECT_DIR/commands/version.go
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
 
@@ -87,3 +92,6 @@ echo BURAQCMDBIN="$PROJECT_DIR/cmdbin"   >> $HOME/.buraq/env
 echo GOVERSION="$($GO version)"          >> $HOME/.buraq/env
 
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
+
+
+cp $PROJECT_DIR/passlist.txt $HOME/.buraq/
