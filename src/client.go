@@ -12,15 +12,16 @@ package buraq
 
 import (
 	"fmt"
-	utils "github.com/NovusEdge/buraq/utils"
-	"golang.org/x/crypto/ssh"
 	"log"
 	"time"
+
+	utils "github.com/NovusEdge/buraq/utils"
+	"golang.org/x/crypto/ssh"
 )
 
 // AttemptConnection tries to connect to the ssh server using credentials
 // provided.
-func AttemptConnection(proto, username, host, password string, port uint16, timeout time.Duration) (bool, error) {
+func AttemptConnection(proto, username, host, password string, port uint, timeout time.Duration) (bool, error) {
 	if proto != "tcp" || proto != "udp" {
 		log.Println(utils.ColorIt(utils.ColorYellow, fmt.Sprintf("[W]: Did not recognize protocol: %s for ssh dialup.\nUsing tcp as default", proto)))
 		proto = "tcp"
@@ -32,7 +33,9 @@ func AttemptConnection(proto, username, host, password string, port uint16, time
 		Timeout: timeout,
 	}
 
-	client, clientErr := ssh.Dial(proto, host, sshConfig)
+	sshConfig.HostKeyCallback = ssh.InsecureIgnoreHostKey()
+
+	client, clientErr := ssh.Dial(proto, fmt.Sprintf("%s:%d", host, port), sshConfig)
 	if clientErr != nil {
 		return false, clientErr
 	}
@@ -45,8 +48,8 @@ func AttemptConnection(proto, username, host, password string, port uint16, time
 	}
 	defer session.Close()
 
-	out, err := session.Output("whoami")
-	if err != nil || string(out) != username {
+	_, err := session.Output("whoami")
+	if err != nil {
 		return false, err
 	}
 
