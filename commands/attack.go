@@ -29,6 +29,11 @@ func main() {
 		fmt.Println(src.CommandAttackHelp)
 	}
 
+	if len(os.Args) < 2 {
+		fmt.Println(utils.ColorIt(utils.ColorYellow, "[!]: No options provided!\nRun 'buraq help attack' for usage information."))
+		os.Exit(0)
+	}
+
 	var t int
 	var port uint
 	var user string

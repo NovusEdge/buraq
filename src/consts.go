@@ -27,7 +27,6 @@ func ValidCommands() []string {
 	return []string{
 		"env",
 		"help",
-		"check",
 		"clean",
 		"attack",
 		"repair",
@@ -55,7 +54,6 @@ COMMANDS:
     env                 Prints the environment variables used by the CLI.
                         These are stored (by default) in ~/.buraq
 
-    check               Perform simple enumeration for ssh services on target.
     attack              Perform a bruteforce attack on specified target using
                         a user/userlist and a password list.
                         If no user is specified, "root" is used.
@@ -66,8 +64,7 @@ COMMANDS:
 
 // The help/manuals for each command.
 const (
-	CommandAttackHelp = `
-USAGE:
+	CommandAttackHelp = `USAGE:
 	buraq attack [options] [target]
 
 OPTIONS:
@@ -91,4 +88,38 @@ OPTIONS:
 
     -timeout
         Specifies the timeout between each attack attempt in milliseconds. (Default: 500ms)`
+
+	CommandHelpHelp = `USAGE:
+    buraq help [command]
+
+The help, if used on it's own (e.g. 'buraq help') displays usage for the CLI.
+When supplied with the name of another command, the help command displays information about the said command.
+
+Example:
+    buraq help attack
+
+This will display the usage information about the 'attack' command.`
+
+	CommandVersionHelp = `USAGE:
+    buraq version
+
+The 'version' command reports the version of buraq in use.`
+	CommandEnvHelp = `
+USAGE:
+    buraq env
+
+The 'env' command prints the environment variables used by buraq.
+These variables are stored in ~/.buraq/env (given that the setup file is run)`
+
+	CommandRepairHelp = `USAGE:
+    buraq repair
+
+The 'repair' command rebuilds all binaries that are used by the CLI.
+Note that it does not fetch and/or update the golang dependencies,
+to do that you must run the setup script.`
+
+	CommandCleanHelp = `USAGE:
+    buraq clean
+
+The 'clean' command deletes/removes all binaries compiled and used by buraq.`
 )
