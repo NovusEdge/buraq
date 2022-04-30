@@ -53,7 +53,7 @@ $ export PATH=$PATH:$(cat $HOME/.buraq/env | grep BURAQBIN | awk -F'=' '{print $
 To display help/usage information for `buraq`, use `buraq help`:
 
 ```console
-$buraq help
+$ buraq help
 buraq v1.0.0 (c) 2022 by Aliasgar Khimani (NovusEdge) - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
 Buraq:
