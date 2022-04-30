@@ -53,7 +53,7 @@ func checkCommand(args []string) {
 
 func executeCommand(args []string) {
 	var cmd *exec.Cmd
-	var out bytes.Buffer
+	// var out bytes.Buffer
 
 	command := args[1]
 	commandString := filepath.Join(ENV["BURAQCMDBIN"], command)
@@ -64,16 +64,16 @@ func executeCommand(args []string) {
 		cmd = exec.Command(commandString, args...)
 	}
 
-	cmd.Stdout = &out
+	cmd.Stdout = os.Stdout
 	err := cmd.Run()
 
 	if err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-	if s := out.String(); s != "" {
-		fmt.Println(s)
-	}
+	// if s := out.String(); s != "" {
+	// 	fmt.Println(s)
+	// }
 }
 
 func env() {
