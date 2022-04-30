@@ -22,7 +22,7 @@ import (
 // AttemptConnection tries to connect to the ssh server using credentials
 // provided.
 func AttemptConnection(proto, username, host, password string, port uint, timeout time.Duration) (bool, error) {
-	if proto != "tcp" || proto != "udp" {
+	if proto != "tcp" && proto != "udp" {
 		log.Println(utils.ColorIt(utils.ColorYellow, fmt.Sprintf("[W]: Did not recognize protocol: %s for ssh dialup.\nUsing tcp as default", proto)))
 		proto = "tcp"
 	}
@@ -34,6 +34,7 @@ func AttemptConnection(proto, username, host, password string, port uint, timeou
 	}
 
 	sshConfig.HostKeyCallback = ssh.InsecureIgnoreHostKey()
+	sshConfig.SetDefaults()
 
 	client, clientErr := ssh.Dial(proto, fmt.Sprintf("%s:%d", host, port), sshConfig)
 	if clientErr != nil {
