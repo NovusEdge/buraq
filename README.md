@@ -39,7 +39,7 @@ $ bash setup.bash
 ***NOTE***: `buraq` is not added to `$PATH` by the setup script. If you wish to add it to your `PATH`, add the following line to your `~/.profile` or `~/.bashrc` files **after running the setup script**.
 
 ```bash
-PATH=$PATH:$(cat $HOME/.buraq/env | grep BURAQBIN | awk -F'=' '{print $2}') >> ~/.profile
+PATH=$PATH:$(cat $HOME/.buraq/env | grep BURAQBIN | awk -F'=' '{print $2}')
 ```
 
 Alternatively, if you don't want to add it to `PATH`, you can simply type in:
