@@ -87,10 +87,7 @@ OPTIONS:
         https://github.com/danielmiessler/SecLists/blob/master/Passwords/xato-net-10-million-passwords-100000.txt
 
     -timeout
-        Specifies the timeout between each attack attempt in milliseconds. (Default: 500ms)
-
-    -threads
-        Specify the number of threads to use for the attack. (Default: 16)`
+        Specifies the timeout between each attack attempt in milliseconds. (Default: 500ms)`
 
 	CommandHelpHelp = `USAGE:
     buraq help [command]
