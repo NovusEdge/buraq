@@ -94,4 +94,5 @@ echo GOVERSION="$($GO version)"          >> $HOME/.buraq/env
 printf "\033[1;32m[+]: Done!\033[0m\n\n";
 
 
-cp $PROJECT_DIR/passlist.txt $HOME/.buraq/
+cp $PROJECT_DIR/default_passlist.txt $HOME/.buraq/
+cp $PROJECT_DIR/default_userlist.txt $HOME/.buraq/

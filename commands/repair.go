@@ -12,15 +12,16 @@ package main
 
 import (
 	"fmt"
-	utils "github.com/NovusEdge/buraq/utils"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
+
+	buraqlib "github.com/NovusEdge/buraq/buraqlib"
 )
 
 func main() {
-	env := utils.GetEnv()
+	env := buraqlib.GetEnv()
 
 	// Cleaning binaries...
 	cleaningErr := exec.Command(fmt.Sprintf("%s/clean", env["BURAQCMDBIN"])).Run()
