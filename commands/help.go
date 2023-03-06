@@ -14,8 +14,8 @@ import (
 	"fmt"
 	"os"
 
+	buraqlib "github.com/NovusEdge/buraq/buraqlib"
 	src "github.com/NovusEdge/buraq/src"
-	utils "github.com/NovusEdge/buraq/utils"
 )
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 		case "repair":
 			fmt.Println(src.CommandRepairHelp)
 		default:
-			fmt.Println(utils.ColorIt(utils.ColorRed, fmt.Sprintf("[E]: Invalid Command: '%s'\nPlease use 'buarq help' for usage", cmd)))
+			fmt.Println(buraqlib.ColorIt(buraqlib.ColorRed, fmt.Sprintf("[E]: Invalid Command: '%s'\nPlease use 'buarq help' for usage", cmd)))
 		}
 	}
 }

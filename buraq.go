@@ -18,12 +18,12 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	buraqlib "github.com/NovusEdge/buraq/buraqlib"
 	src "github.com/NovusEdge/buraq/src"
-	utils "github.com/NovusEdge/buraq/utils"
 )
 
 // ENV is the environment variables for the program
-var ENV = utils.GetEnv()
+var ENV = buraqlib.GetEnv()
 
 func main() {
 	checkCommand(os.Args)
@@ -45,7 +45,7 @@ func checkCommand(args []string) {
 	}
 
 	if !ok {
-		fmt.Println(utils.ColorIt(utils.ColorRed, "[E]: Invalid command!\nUse \"buraq help\" to show the usage for buraq."))
+		fmt.Println(buraqlib.ColorIt(buraqlib.ColorRed, "[E]: Invalid command!\nUse \"buraq help\" to show the usage for buraq."))
 		os.Exit(1)
 	}
 

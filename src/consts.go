@@ -68,18 +68,16 @@ const (
 	buraq attack [options] [target]
 
 OPTIONS:
-    -port
+    -p
         Specifies the port to use for the attack. (Default: 22)
 
-    -proto
-        Specifies the protocol to use for the attack (tcp/udp) (Default: tcp)
-
-    -user
+    -u
         Specifies the user/login-name for the attack. (Default: root)
 
     -userlist
         Specifies a user-list to use for the attack.
-        If this is specified along with the -u option then the value from that will be appended to the user-list.
+        If this is specified along with the -user option then the value from that will be appended to the user-list.
+
 
     -passlist
         Specifies a password-list to use for the attack. (Default: ~/.buraq/passlist.txt)
@@ -89,8 +87,11 @@ OPTIONS:
     -timeout
         Specifies the timeout between each attack attempt in milliseconds. (Default: 500ms)
 
-    -threads
-        Specify the number of threads to use for the attack. (Default: 16)`
+    -t
+        Specify the number of threads to use for the attack. (Default: 32)
+
+	-verbose
+		Specify if the program should be verbose with its messages or not`
 
 	CommandHelpHelp = `USAGE:
     buraq help [command]

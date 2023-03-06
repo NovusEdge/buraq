@@ -11,15 +11,16 @@ package main
 */
 
 import (
-	utils "github.com/NovusEdge/buraq/utils"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
+
+	buraqlib "github.com/NovusEdge/buraq/buraqlib"
 )
 
 func main() {
-	env := utils.GetEnv()
+	env := buraqlib.GetEnv()
 	bin, err := ioutil.ReadDir(env["BURAQBIN"])
 	if err != nil {
 		log.Fatal(err)
